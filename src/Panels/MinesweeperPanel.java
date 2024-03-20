@@ -1,8 +1,11 @@
+package Panels;
+
 import javax.swing.*;
 import java.awt.*;
+import Game.Game;
 
 public class MinesweeperPanel extends JPanel {
-    static Field[] fieldsArray;
+    public static Field[] fieldsArray;
 
     public MinesweeperPanel(GridLayout gridLayout, Field[] fieldsArray) {
         MinesweeperPanel.fieldsArray = fieldsArray;
@@ -51,9 +54,9 @@ public class MinesweeperPanel extends JPanel {
                 if (field.isBomb() && field.isFlag()) field.setButtonBackground(Color.GREEN);
                 else if(field.isBomb())field.setButtonBackground(Color.RED);
             }
-            int result = JOptionPane.showConfirmDialog(null, "GAME OVER! Play again?", "Confirmation", JOptionPane.YES_NO_OPTION);
+            int result = JOptionPane.showConfirmDialog(Game.myFrame, "GAME OVER! Play again?", "Confirmation", JOptionPane.YES_NO_OPTION);
             Game.restart(result);
-        } else if (index >= 0 && index < fieldsArray.length && !fieldsArray[index].isBomb() && !fieldsArray[index].isVisited() && !fieldsArray[index].isFlag()) {
+        } else if (index >= 0 && index < fieldsArray.length && !fieldsArray[index].isBomb() && fieldsArray[index].isNotVisited() && !fieldsArray[index].isFlag()) {
             fieldsArray[index].setVisited(true);
             fieldsArray[index].setButtonVisible(false);
 
@@ -77,16 +80,20 @@ public class MinesweeperPanel extends JPanel {
     }
 
     public static void checkWin() {
-        int count = 0;
+        int remainingBombs = 0;
+        int unvisitedFields = 0;
 
         for (Field field : fieldsArray) {
-            if (field.isBomb() && field.isFlag()) {
-                count++;
+            if (field.isBomb() && field.isNotVisited()) {
+                remainingBombs++;
+            }
+            if(field.isNotVisited()) {
+                unvisitedFields++;
             }
         }
 
-        if(count == InformationPanel.getTotalBombs()) {
-            int result = JOptionPane.showConfirmDialog(null, "You won! Play again?", "Confirmation", JOptionPane.YES_NO_OPTION);
+        if(remainingBombs == unvisitedFields) {
+            int result = JOptionPane.showConfirmDialog(Game.myFrame, "You won! Play again?", "Confirmation", JOptionPane.YES_NO_OPTION);
             Game.restart(result);
         }
     }

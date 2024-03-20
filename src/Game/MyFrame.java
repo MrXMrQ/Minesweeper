@@ -1,3 +1,6 @@
+package Game;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
@@ -5,6 +8,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class MyFrame extends JFrame {
     boolean open = false;
@@ -16,6 +21,11 @@ public class MyFrame extends JFrame {
         setLayout(new BorderLayout());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setFocusable(true);
+
+        ImageIcon icon = loadIcon("Sprites/icon.jpg");
+        if (icon != null) {
+            setIconImage(icon.getImage());
+        }
 
         addKeyListener(new KeyAdapter() {
             @Override
@@ -88,5 +98,18 @@ public class MyFrame extends JFrame {
                 }
             }
         });
+    }
+
+    private ImageIcon loadIcon(String path) {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(path)) {
+            if (inputStream != null) {
+                return new ImageIcon(ImageIO.read(inputStream));
+            } else {
+                System.err.println("Icon " + path + " not found!");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

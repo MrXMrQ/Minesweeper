@@ -1,3 +1,5 @@
+package Panels;
+
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
@@ -5,7 +7,7 @@ import java.awt.event.*;
 
 public class Field extends JLabel {
     private JButton button;
-    private final boolean isBomb;
+    private boolean isBomb;
     private boolean isFlag;
     private int bombs;
     private final int index;
@@ -33,6 +35,7 @@ public class Field extends JLabel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 MinesweeperPanel.removeField(index);
+                MinesweeperPanel.checkWin();
             }
         });
         button.addMouseListener(new MouseAdapter() {
@@ -43,7 +46,7 @@ public class Field extends JLabel {
                 }
             }
         });
-        button.setPreferredSize(new Dimension(getPreferredSize().width, getPreferredSize().height));
+
         add(button);
         setBackgroundAndButtonColor();
         addComponentListener(new ComponentAdapter() {
@@ -70,6 +73,10 @@ public class Field extends JLabel {
 
     public boolean isBomb() {
         return isBomb;
+    }
+
+    public void setBomb(boolean isBomb) {
+        this.isBomb = isBomb;
     }
 
     public boolean isFlag() {
@@ -103,8 +110,8 @@ public class Field extends JLabel {
         button.setVisible(visible);
     }
 
-    public boolean isVisited() {
-        return visited;
+    public boolean isNotVisited() {
+        return !visited;
     }
 
     public void setVisited(boolean visited) {
@@ -125,7 +132,5 @@ public class Field extends JLabel {
             setFlag(true);
             InformationPanel.decreaseFlags();
         }
-
-        MinesweeperPanel.checkWin();
     }
 }
